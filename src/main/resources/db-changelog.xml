@@ -1,0 +1,2620 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <property name="int" value="int" dbms="mysql, postgresql"/>
+    <property name="numeric" value="numeric" dbms="mysql, postgresql"/>
+    <property name="double" value="double" dbms="mysql,postgresql"/>
+    <property name="boolean" value="tinyint(1)" dbms="mysql"/>
+    <property name="boolean" value="boolean" dbms="postgresql"/>
+    <property name="char" value="varchar(1)" dbms="mysql, postgresql"/>
+    <property name="varchar.small" value="varchar(120)" dbms="mysql, postgresql"/>
+    <property name="varchar.medium" value="varchar(255)" dbms="mysql, postgresql"/>
+    <property name="varchar.large" value="varchar(1000)" dbms="mysql, postgresql"/>
+    <property name="varchar.very_large" value="varchar(4000)" dbms="mysql, postgresql"/>
+    <property name="text" value="text" dbms="mysql, postgresql"/>
+    <property name="timestamp" value="timestamp" dbms="mysql, postgresql"/>
+    <property name="date" value="date" dbms="mysql, postgresql"/>
+    <property name="decimal" value="decimal" dbms="mysql, postgresql"/>
+    <property name="date.now" value="now()" dbms="mysql, postgresql"/>
+
+    <property name="int" value="int" dbms="mssql"/>
+    <property name="double" value="float" dbms="mssql"/>
+    <property name="boolean" value="bit" dbms="mssql"/>
+    <property name="char" value="varchar(1)" dbms="mssql"/>
+    <property name="varchar.small" value="varchar(120)" dbms="mssql"/>
+    <property name="varchar.medium" value="varchar(255)" dbms="mssql"/>
+    <property name="varchar.large" value="varchar(1000)" dbms="mssql"/>
+    <property name="text" value="text" dbms="mssql"/>
+    <property name="timestamp" value="datetime" dbms="mssql"/>
+    <property name="date" value="date" dbms="mssql"/>
+    <property name="date.now" value="getdate()" dbms="mssql"/>
+
+    <changeSet id="1" author="users">
+        <comment>
+            Create Table User, Role, UserRole, Authority, RoleAuthority,insert user admin
+        </comment>
+        <createTable tableName="users">
+            <column name="id" type="${int}" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="username" type="${varchar.medium}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="email" type="${varchar.medium}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="password" type="${varchar.medium}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="profile_image_url" type="${varchar.medium}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="account_status" type="${varchar.small}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="is_kyc" type="${boolean}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="is_otp" type="${boolean}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="is_accept" type="${boolean}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="is_enabled" type="${boolean}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="is_non_locked" type="${boolean}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_date" type="${timestamp}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_by" type="${varchar.small}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_date" type="${timestamp}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_by" type="${varchar.small}">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <createTable tableName="role">
+            <column name="id" type="${int}" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="${varchar.medium}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_date" type="${timestamp}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_by" type="${varchar.small}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_date" type="${timestamp}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_by" type="${varchar.small}">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <createTable tableName="user_role">
+            <column name="id" type="${int}" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="user_id" type="${int}">
+                <constraints nullable="false"
+                             referencedTableName="users"
+                             referencedColumnNames="id"
+                             foreignKeyName="fk_user_role_user_id"/>
+            </column>
+            <column name="role_id" type="${int}">
+                <constraints nullable="false"
+                             referencedTableName="role"
+                             referencedColumnNames="id"
+                             foreignKeyName="fk_user_role_role_id"/>
+            </column>
+            <column name="created_date" type="${timestamp}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_by" type="${varchar.small}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_date" type="${timestamp}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_by" type="${varchar.small}">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <createTable tableName="authority">
+            <column name="id" type="${int}" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="${varchar.medium}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_date" type="${timestamp}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_by" type="${varchar.small}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_date" type="${timestamp}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_by" type="${varchar.small}">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <createTable tableName="role_authority">
+            <column name="id" type="${int}" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="role_id" type="${int}">
+                <constraints nullable="false"
+                             referencedTableName="role"
+                             referencedColumnNames="id"
+                             foreignKeyName="fk_role_authority_role_id"/>
+            </column>
+            <column name="authority_id" type="${int}">
+                <constraints nullable="false"
+                             referencedTableName="authority"
+                             referencedColumnNames="id"
+                             foreignKeyName="fk_role_authority_authority_id"/>
+            </column>
+            <column name="created_date" type="${timestamp}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_by" type="${varchar.small}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_date" type="${timestamp}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_by" type="${varchar.small}">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addUniqueConstraint columnNames="username,email"
+                             constraintName="users_unique_username"
+                             tableName="users"
+        />
+        <insert tableName="role">
+            <column name="name" value="System Admin"/>
+            <column name="created_date" value="${date.now}"/>
+            <column name="created_by" value="SuperAdmin"/>
+            <column name="updated_date" value="${date.now}"/>
+            <column name="updated_by" value="SuperAdmin"/>
+        </insert>
+        <insert tableName="users">
+            <column name="username" value="super_admin"/>
+            <column name="email" value="superadmin@email.com"/>
+            <column name="password" value="{bcrypt}$2a$10$y9tA3UcjC1bKrDOTvUGRT.n5dEmvtC.ZRFDnwn79/.sicR1IKsK9a"/>
+            <column name="profile_image_url" value=""/>
+            <column name="account_status" value=""/>
+            <column name="is_kyc" value="1"/>
+            <column name="is_otp" value="1"/>
+            <column name="is_accept" value="1"/>
+            <column name="is_enabled" value="1"/>
+            <column name="is_non_locked" value="1"/>
+            <column name="created_date" value="${date.now}"/>
+            <column name="created_by" value="SuperAdmin"/>
+            <column name="updated_date" value="${date.now}"/>
+            <column name="updated_by" value="SuperAdmin"/>
+        </insert>
+        <insert tableName="user_role">
+            <column name="user_id" value="1"/>
+            <column name="role_id" value="1"/>
+            <column name="created_date" value="${date.now}"/>
+            <column name="created_by" value="SuperAdmin"/>
+            <column name="updated_date" value="${date.now}"/>
+            <column name="updated_by" value="SuperAdmin"/>
+        </insert>
+    </changeSet>
+    <changeSet id="2" author="james">
+        <comment>Initial OAuth2 Server</comment>
+        <createTable tableName="oauth_client_details">
+            <column name="client_id" type="varchar(256)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="resource_ids" type="varchar(256)"/>
+            <column name="client_secret" type="varchar(256)"/>
+            <column name="scope" type="varchar(256)"/>
+            <column name="authorized_grant_types" type="varchar(256)"/>
+            <column name="web_server_redirect_uri" type="varchar(256)"/>
+            <column name="authorities" type="varchar(256)"/>
+            <column name="access_token_validity" type="int"/>
+            <column name="refresh_token_validity" type="int"/>
+            <column name="additional_information" type="varchar(4096)"/>
+            <column name="autoapprove" type="varchar(256)"/>
+        </createTable>
+        <createTable tableName="oauth_client_token">
+            <column name="token_id" type="varchar(256)"/>
+            <column name="token" type="LONGVARBINARY"/>
+            <column name="authentication_id" type="varchar(256)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="user_name" type="varchar(256)"/>
+            <column name="client_id" type="varchar(256)"/>
+        </createTable>
+        <createTable tableName="oauth_access_token">
+            <column name="token_id" type="varchar(256)"/>
+            <column name="token" type="LONGVARBINARY"/>
+            <column name="authentication_id" type="varchar(256)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="user_name" type="varchar(256)"/>
+            <column name="client_id" type="varchar(256)"/>
+            <column name="authentication" type="LONGVARBINARY"/>
+            <column name="refresh_token" type="varchar(256)"/>
+        </createTable>
+        <createTable tableName="oauth_refresh_token">
+            <column name="token_id" type="varchar(256)"/>
+            <column name="token" type="LONGVARBINARY"/>
+            <column name="authentication" type="LONGVARBINARY"/>
+        </createTable>
+        <createTable tableName="oauth_code">
+            <column name="oauth_code" type="varchar(256)"/>
+            <column name="authentication" type="LONGVARBINARY"/>
+        </createTable>
+        <createTable tableName="oauth_approvals">
+            <column name="userId" type="varchar(256)"/>
+            <column name="clientId" type="varchar(256)"/>
+            <column name="scope" type="varchar(256)"/>
+            <column name="status" type="varchar(10)"/>
+            <column name="expiresAt" type="timestamp"/>
+            <column name="lastModifiedAt" type="timestamp"/>
+        </createTable>
+        <createTable tableName="ClientDetails">
+            <column name="appId" type="varchar(256)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="resourceIds" type="varchar(256)"/>
+            <column name="appSecret" type="varchar(256)"/>
+            <column name="scope" type="varchar(256)"/>
+            <column name="grantTypes" type="varchar(256)"/>
+            <column name="redirectUrl" type="varchar(256)"/>
+            <column name="authorities" type="varchar(256)"/>
+            <column name="access_token_validity" type="int"/>
+            <column name="refresh_token_validity" type="int"/>
+            <column name="additionalInformation" type="varchar(4096)"/>
+            <column name="autoApproveScopes" type="varchar(256)"/>
+        </createTable>
+        <insert tableName="oauth_client_details">
+            <column name="client_id" value="clientIdPassword"/>
+            <column name="client_secret" value="{bcrypt}$2a$10$.1oDefMAs6WrvuNuobKbuuTXLgwkiDtBO7o1GhgUlwoUmmVzF44.."/>
+            <column name="scope" value="user"/>
+            <column name="authorized_grant_types" value="password,authorization_code,refresh_token"/>
+            <column name="access_token_validity" value="3600"/>
+            <column name="refresh_token_validity" value="3600"/>
+            <column name="autoapprove" value="true"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="3" author="james">
+        <comment>
+            create table account
+        </comment>
+        <createTable tableName="accounts">
+            <column name="id" type="${int}" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="user_id" type="${int}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="port_id" type="${int}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="agent_code" type="${varchar.small}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="card_id" type="${varchar.small}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="card_expire_date" type="${date}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="is_forever" type="${boolean}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="name_title" type="${varchar.small}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="firstname_th" type="${varchar.medium}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="firstname_en" type="${varchar.medium}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="lastname_th" type="${varchar.medium}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="lastname_en" type="${varchar.medium}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="birthday" type="${date}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="nationality" type="${varchar.small}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="marital_status" type="${varchar.small}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="spouse_firstname_th" type="${varchar.medium}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="spouse_firstname_en" type="${varchar.medium}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="spouse_lastname_th" type="${varchar.medium}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="spouse_lastname_en" type="${varchar.medium}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="tel" type="${varchar.small}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="email" type="${varchar.medium}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="occupation" type="${varchar.medium}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="occupation_type" type="${varchar.medium}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="position" type="${varchar.medium}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="address_present_type" type="${varchar.small}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="address_occupation_type" type="${varchar.small}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="address_document_type" type="${varchar.small}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="document_earn_type" type="${varchar.small}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="in_come_country" type="${varchar.medium}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="in_come_earn" type="${varchar.medium}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="in_come" type="${varchar.medium}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="asset_value" type="${text}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="objective" type="${varchar.medium}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_date" type="${timestamp}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_by" type="${varchar.small}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_date" type="${timestamp}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_by" type="${varchar.small}">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="addresses">
+            <column name="id" type="${int}" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="account_id" type="${int}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="type" type="${varchar.medium}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="country" type="${varchar.medium}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="postal_code" type="${text}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="city" type="${varchar.small}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="district" type="${varchar.small}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="sub_district" type="${varchar.small}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="house_no" type="${varchar.small}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="village_no" type="${varchar.small}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="house" type="${varchar.small}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="room_no" type="${varchar.small}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="floor" type="${varchar.small}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="soi" type="${varchar.small}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="road" type="${varchar.small}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ref_text" type="${varchar.medium}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="created_date" type="${timestamp}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_by" type="${varchar.small}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_date" type="${timestamp}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_by" type="${varchar.small}">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="user_kyc">
+            <column name="id" type="${int}" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="user_id" type="${int}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="image_url" type="${varchar.medium}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_date" type="${timestamp}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_by" type="${varchar.small}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_date" type="${timestamp}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_by" type="${varchar.small}">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="4" author="james">
+        <comment></comment>
+        <createTable tableName="fund_api">
+            <column name="id" type="${int}" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="type" type="${varchar.medium}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="is_complete" type="${boolean}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_date" type="${timestamp}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_by" type="${varchar.small}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_date" type="${timestamp}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_by" type="${varchar.small}">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="content">
+            <column name="id" type="${int}" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="type" type="${varchar.medium}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="detail" type="${text}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_date" type="${timestamp}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_by" type="${varchar.small}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_date" type="${timestamp}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_by" type="${varchar.small}">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="fs_file">
+            <column name="id" type="${int}" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="path" type="varchar(512)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="url" type="varchar(512)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="upload_date" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+            <column name="bucket" type="varchar(20)">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="5" author="james">
+        <comment></comment>
+        <createTable tableName="assessments">
+            <column name="id" type="${int}" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="no" type="${int}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="detail" type="${text}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_date" type="${timestamp}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_by" type="${varchar.small}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_date" type="${timestamp}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_by" type="${varchar.small}">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="assessment_choice">
+            <column name="id" type="${int}" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="no" type="${int}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="assessment_id" type="${int}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="type" type="${varchar.small}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="detail" type="${text}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="score" type="${int}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_date" type="${timestamp}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_by" type="${varchar.small}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_date" type="${timestamp}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_by" type="${varchar.small}">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="user_assessment">
+            <column name="id" type="${int}" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="user_id" type="${int}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="guest_id" type="${int}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="score" type="${int}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="expire_date" type="${date}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_date" type="${timestamp}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_by" type="${varchar.small}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_date" type="${timestamp}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_by" type="${varchar.small}">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="user_assessment_choice">
+            <column name="id" type="${int}" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="user_assessment_id" type="${int}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="assessment_no" type="${int}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="choice_no" type="${int}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_date" type="${timestamp}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_by" type="${varchar.small}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_date" type="${timestamp}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_by" type="${varchar.small}">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="6" author="winai.k">
+        <createTable tableName="fund_token">
+            <column name="id" type="${int}" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="username" type="${varchar.small}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="access_token" type="${text}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="sa_code" type="${varchar.small}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="is_passthrough" type="${boolean}">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="7" author="james">
+        <comment></comment>
+        <createTable tableName="fund_plan">
+            <column name="id" type="${int}" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="user_id" type="${int}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="name" type="${varchar.medium}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_date" type="${timestamp}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_by" type="${varchar.small}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_date" type="${timestamp}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_by" type="${varchar.small}">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="basket">
+            <column name="id" type="${int}" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="fund_plan_id" type="${int}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="user_id" type="${int}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="type" type="${varchar.small}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_date" type="${timestamp}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_by" type="${varchar.small}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_date" type="${timestamp}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_by" type="${varchar.small}">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="basket_order">
+            <column name="id" type="${int}" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="basket_id" type="${int}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="fund_id" type="${int}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="amount" type="${double}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_date" type="${timestamp}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_by" type="${varchar.small}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_date" type="${timestamp}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_by" type="${varchar.small}">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="fund_follow">
+            <column name="id" type="${int}" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="user_id" type="${int}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="fund_id" type="${int}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_date" type="${timestamp}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_by" type="${varchar.small}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_date" type="${timestamp}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_by" type="${varchar.small}">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="8" author="james">
+        <comment></comment>
+        <addColumn tableName="users">
+            <column name="card_number" type="${varchar.small}">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+        <addColumn tableName="users">
+            <column name="passport_country" type="${varchar.small}">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+
+        <addColumn tableName="assessments">
+            <column name="detail_en" type="${varchar.large}">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+        <addColumn tableName="user_assessment">
+            <column name="risk_level" type="${int}">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+        <addColumn tableName="assessment_choice">
+            <column name="detail_en" type="${varchar.large}">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+
+        <renameColumn newColumnName="card_number"
+                      columnDataType="${varchar.small}"
+                      oldColumnName="card_id"
+                      tableName="accounts"/>
+        <renameColumn newColumnName="detail_th"
+                      columnDataType="${varchar.large}"
+                      oldColumnName="detail"
+                      tableName="assessments"/>
+        <renameColumn newColumnName="detail_th"
+                      columnDataType="${varchar.large}"
+                      oldColumnName="detail"
+                      tableName="assessment_choice"/>
+
+        <dropNotNullConstraint columnDataType="${varchar.medium}"
+                               columnName="position"
+                               tableName="accounts"/>
+        <dropNotNullConstraint columnDataType="${varchar.small}"
+                               columnName="address_present_type"
+                               tableName="accounts"/>
+        <dropNotNullConstraint columnDataType="${varchar.small}"
+                               columnName="address_occupation_type"
+                               tableName="accounts"/>
+        <dropNotNullConstraint columnDataType="${varchar.small}"
+                               columnName="address_document_type"
+                               tableName="accounts"/>
+        <dropNotNullConstraint columnDataType="${varchar.small}"
+                               columnName="document_earn_type"
+                               tableName="accounts"/>
+        <dropNotNullConstraint columnDataType="${varchar.medium}"
+                               columnName="objective"
+                               tableName="accounts"/>
+        <dropNotNullConstraint columnDataType="${text}"
+                               columnName="asset_value"
+                               tableName="accounts"/>
+        <dropNotNullConstraint columnDataType="${varchar.medium}"
+                               columnName="email"
+                               tableName="accounts"/>
+    </changeSet>
+
+    <changeSet id="9" author="james">
+        <comment></comment>
+        <createTable tableName="funds">
+            <column name="id" type="${int}" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="fund_code" type="${varchar.small}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="amc_code" type="${varchar.small}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="th_fund_name" type="${varchar.large}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="en_fund_name" type="${varchar.large}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="fund_policy" type="${varchar.small}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="tax_type" type="${varchar.small}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="fif_flag" type="${varchar.small}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="dividend_flag" type="${varchar.small}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="registration_date" type="${Date}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="fund_risk_level" type="${varchar.small}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="fx_risk_flag" type="${varchar.small}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="fatca_allow_flag" type="${varchar.small}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="buy_cut_off_time" type="${varchar.small}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="fst_low_buy_val" type="${double}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="nxt_low_buy_val" type="${double}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="sell_cut_off_time" type="${varchar.small}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="low_sell_val" type="${double}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="low_sell_unit" type="${double}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="low_bal_val" type="${double}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="low_bal_unit" type="${double}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="sell_settlement_day" type="${double}">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="asset_management_company">
+            <column name="id" type="${int}" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="amc_code" type="${varchar.small}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="th_name" type="${varchar.large}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="en_name" type="${varchar.large}">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="fund_fee">
+            <column name="id" type="${int}" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="effective_date" type="${date}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="fund_code" type="${varchar.small}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="fee_type" type="${varchar.small}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="fee_unit" type="${varchar.small}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="maximum_fee" type="${double}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="actual_fee" type="${double}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="minimum_fee" type="${double}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="remark" type="${text}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="maximum_value" type="${double}">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="fund_nav">
+            <column name="id" type="${int}" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="amc_code" type="${varchar.small}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="fund_code" type="${varchar.small}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="aum" type="${double}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="nav" type="${double}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="offer_nav" type="${double}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="bid_nav" type="${double}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="switch_out_nav" type="${double}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="switch_in_nav" type="${double}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="nav_date" type="${date}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="sa_code_for_unit_link" type="${varchar.medium}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="total_unit" type="${double}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="total_aum" type="${double}">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="10" author="james">
+        <comment></comment>
+        <createTable tableName="fund_performance">
+            <column name="id" type="${int}" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="fund_code" type="${varchar.small}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="p_ytd_return" type="${double}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="p_3m_return" type="${double}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="p_6m_return" type="${double}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="p_1y_return" type="${double}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="p_3y_return" type="${double}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="p_5y_return" type="${double}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="p_10y_return" type="${double}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="p_si_return" type="${double}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="p_1y_sd" type="${double}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="p_3y_sd" type="${double}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="p_5y_sd" type="${double}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="p_10y_sd" type="${double}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="nav_date" type="${date}">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+
+        <dropNotNullConstraint columnDataType="${boolean}"
+                               columnName="is_accept"
+                               tableName="users"/>
+
+        <renameColumn newColumnName="term_version"
+                      oldColumnName="is_accept"
+                      tableName="users"
+                      columnDataType="${int}"/>
+
+        <renameTable newTableName="contents"
+                     oldTableName="content"/>
+
+        <addColumn tableName="contents">
+            <column name="version" type="${int}">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+
+        <dropUniqueConstraint constraintName="users_unique_username" tableName="users"/>
+
+        <dropColumn
+                columnName="email"
+                tableName="users"/>
+
+        <addNotNullConstraint
+                columnDataType="${varchar.medium}"
+                columnName="username"
+                tableName="users"/>
+
+        <sql>
+            UPDATE users
+            SET username = 'superadmin@email.com'
+            WHERE id = 1;
+        </sql>
+    </changeSet>
+
+    <changeSet id="11" author="james">
+        <comment></comment>
+        <createTable tableName="reset_password">
+            <column name="id" type="${int}" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="user_id" type="${int}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="token" type="${text}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="expired_date" type="${Timestamp}">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="13" author="james">
+        <comment>master data</comment>
+        <createTable tableName="drop_down">
+            <column name="id" type="${int}" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="type" type="${varchar.small}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="name" type="${varchar.medium}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="value" type="${varchar.small}">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="postal_code">
+            <column name="id" type="${int}" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="postal_code" type="${varchar.small}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="sub_district" type="${varchar.medium}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="district" type="${varchar.medium}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="province" type="${varchar.medium}">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <createTable tableName="user_otp">
+            <column name="id" type="${int}" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="code" type="${varchar.small}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_id" type="${int}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="expired_date" type="${timestamp}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_date" type="${timestamp}">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addColumn tableName="users">
+            <column name="pin" type="${varchar.medium}">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+
+        <renameTable newTableName="third_party_api"
+                     oldTableName="fund_api"/>
+    </changeSet>
+
+    <changeSet id="14" author="james">
+        <comment></comment>
+        <dropNotNullConstraint columnDataType="${varchar.small}"
+                               columnName="road"
+                               tableName="addresses"/>
+        <dropNotNullConstraint columnDataType="${varchar.small}"
+                               columnName="house_no"
+                               tableName="addresses"/>
+        <dropNotNullConstraint columnDataType="${varchar.small}"
+                               columnName="country"
+                               tableName="addresses"/>
+        <dropNotNullConstraint columnDataType="${varchar.small}"
+                               columnName="postal_code"
+                               tableName="addresses"/>
+        <dropNotNullConstraint columnDataType="${varchar.small}"
+                               columnName="district"
+                               tableName="addresses"/>
+        <dropNotNullConstraint columnDataType="${varchar.small}"
+                               columnName="sub_district"
+                               tableName="addresses"/>
+        <renameColumn newColumnName="moo"
+                      columnDataType="${varchar.small}"
+                      oldColumnName="village_no"
+                      tableName="addresses"/>
+        <renameColumn newColumnName="building"
+                      columnDataType="${varchar.small}"
+                      oldColumnName="house"
+                      tableName="addresses"/>
+
+        <dropTable cascadeConstraints="true"
+                   tableName="accounts"/>
+
+        <createTable tableName="accounts">
+            <column name="id" type="${int}" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="user_id" type="${int}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="is_draft" type="${boolean}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="identification_card_type" type="${varchar.small}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="passport_country" type="${varchar.small}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="card_number" type="${varchar.small}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="card_expired_date" type="${varchar.small}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="ac_company_document" type="${varchar.small}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="gender" type="${varchar.small}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="title" type="${varchar.small}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="title_other" type="${varchar.small}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="en_firstname" type="${varchar.small}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="th_firstname" type="${varchar.small}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="en_lastname" type="${varchar.small}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="th_lastname" type="${varchar.small}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="birthdate" type="${date}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="nationality" type="${varchar.small}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="mobile_number" type="${varchar.small}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="email" type="${varchar.small}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="fax" type="${varchar.small}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="marital_status" type="${varchar.small}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="spouse_card_type" type="${varchar.small}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="spouse_passport_country" type="${varchar.small}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="spouse_card_number" type="${varchar.small}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="spouse_title" type="${varchar.small}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="spouse_title_other" type="${varchar.small}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="spouse_th_firstname" type="${varchar.small}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="spouse_en_firstname" type="${varchar.small}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="spouse_th_lastname" type="${varchar.small}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="spouse_en_lastname" type="${varchar.small}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="occupation_id" type="${varchar.small}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="occupation_other" type="${varchar.medium}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="business_type_id" type="${varchar.small}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="business_type_other" type="${varchar.medium}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="monthly_income_level" type="${varchar.small}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="asset_value" type="${double}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="income_source" type="${varchar.medium}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="income_source_other" type="${varchar.medium}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="income_source_country" type="${varchar.small}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="current_address_flag" type="${varchar.small}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="company_name" type="${varchar.medium}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="work_position" type="${varchar.small}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="work_address_flag" type="${varchar.small}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="committed_money_launder" type="${boolean}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="political_related_person" type="${boolean}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="reject_financial_transaction" type="${boolean}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="related_political_person" type="${boolean}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="political_related_person_position" type="${varchar.small}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="can_accept_fx_risk" type="${boolean}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="can_accept_derivative_investment" type="${boolean}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="fatca" type="${boolean}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="mail_address_flag" type="${varchar.small}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="mail_method" type="${varchar.small}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="investment_objective" type="${varchar.small}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="investment_objective_other" type="${varchar.medium}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="created_date" type="${timestamp}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_by" type="${varchar.small}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_date" type="${timestamp}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_by" type="${varchar.small}">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="15" author="ryu">
+        <createTable tableName="ndid_rp_requests">
+            <column name="id" type="${int}" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="request_id" type="${varchar.medium}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="initial_salt" type="${varchar.medium}">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="16"  author="ryu">
+        <addColumn tableName="ndid_rp_requests">
+            <column name="reference_id" type="${varchar.medium}">
+                <constraints nullable="false" />
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="17" author="dome">
+        <createTable tableName="subscription_bank_account">
+            <column name="id" type="${int}" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="user_id" type="${int}">
+                <constraints nullable="false"
+                             referencedTableName="users"
+                             referencedColumnNames="id"
+                             foreignKeyName="fk_sub_bank_to_user_id"/>
+            </column>
+            <column name="fund_plan_id" type="${int}">
+                <constraints nullable="false"
+                             referencedTableName="fund_plan"
+                             referencedColumnNames="id"
+                             foreignKeyName="fk_sub_bank_to_plan_id"/>
+            </column>
+            <column name="bank_code" type="${varchar.small}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="bank_no" type="${varchar.small}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="is_verify" type="boolean" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+            <column name="latest_ddr_message" type="${varchar.medium}">
+            </column>
+            <column name="ddr_request_id" type="${varchar.small}">
+            </column>
+            <column name="created_date" type="${timestamp}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_by" type="${varchar.small}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_date" type="${timestamp}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_by" type="${varchar.small}">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="redemption_bank_account">
+            <column name="id" type="${int}" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="user_id" type="${int}">
+                <constraints nullable="false"
+                             referencedTableName="users"
+                             referencedColumnNames="id"
+                             foreignKeyName="fk_redemp_bank_to_user_id"/>
+            </column>
+            <column name="fund_plan_id" type="${int}">
+                <constraints nullable="false"
+                             referencedTableName="fund_plan"
+                             referencedColumnNames="id"
+                             foreignKeyName="fk_redemp_bank_to_plan_id"/>
+            </column>
+            <column name="bank_code" type="${varchar.small}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="bank_no" type="${varchar.small}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="is_verify" type="boolean" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+            <column name="latest_ddr_message" type="${varchar.medium}">
+            </column>
+            <column name="ddr_request_id" type="${varchar.small}">
+            </column>
+            <column name="created_date" type="${timestamp}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_by" type="${varchar.small}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_date" type="${timestamp}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_by" type="${varchar.small}">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+    </changeSet>
+
+    <changeSet id="18" author="james">
+        <createTable tableName="banks">
+            <column name="id" type="${int}" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="bank_code" type="${varchar.small}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="short_name" type="${varchar.small}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="th_name" type="${varchar.medium}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="en_name" type="${varchar.medium}">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+        <createTable tableName="bank_branch">
+            <column name="id" type="${int}" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="bank_code" type="${varchar.small}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="branch_code" type="${varchar.small}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="th_name" type="${varchar.medium}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="en_name" type="${varchar.medium}">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+        <createTable tableName="cdd_question">
+            <column name="id" type="${int}" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="question_no" type="${int}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="choice_no" type="${int}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="th_choice" type="${varchar.medium}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="en_choice" type="${varchar.medium}">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <createTable tableName="user_cdd">
+            <column name="id" type="${int}" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="user_id" type="${int}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="question_no" type="${int}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="choice_no" type="${int}">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addColumn tableName="accounts">
+            <column name="referral_agent" type="${varchar.small}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="ic_license" type="${varchar.small}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="cdd_no_3" type="${boolean}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="vulnerable_flag" type="${boolean}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="vulnerable_detail" type="${varchar.medium}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="step" type="${int}">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="19"  author="james">
+        <addColumn tableName="fund_plan">
+            <column name="cost" type="${double}">
+                <constraints nullable="true" />
+            </column>
+            <column name="cost_month" type="${double}">
+                <constraints nullable="true" />
+            </column>
+            <column name="cost_period" type="${int}">
+                <constraints nullable="true" />
+            </column>
+            <column name="remark" type="${varchar.large}">
+                <constraints nullable="true" />
+            </column>
+            <column name="is_delete" type="${boolean}" defaultValue="false">
+                <constraints nullable="false" />
+            </column>
+        </addColumn>
+
+        <addColumn tableName="basket_order">
+            <column name="effective_date" type="${date}">
+                <constraints nullable="false" />
+            </column>
+        </addColumn>
+
+        <addColumn tableName="funds">
+            <column name="switching_settlement_day" type="${int}">
+                <constraints nullable="true" />
+            </column>
+            <column name="switch_out_flag" type="${char}">
+                <constraints nullable="true" />
+            </column>
+            <column name="switch_in_flag" type="${char}">
+                <constraints nullable="true" />
+            </column>
+            <column name="fund_class" type="${varchar.medium}">
+                <constraints nullable="true" />
+            </column>
+            <column name="buy_period_flag" type="${char}">
+                <constraints nullable="true" />
+            </column>
+            <column name="sell_period_flag" type="${char}">
+                <constraints nullable="true" />
+            </column>
+            <column name="switch_in_period_flag" type="${char}">
+                <constraints nullable="true" />
+            </column>
+            <column name="switch_out_period_flag" type="${char}">
+                <constraints nullable="true" />
+            </column>
+            <column name="buy_pre_order_day" type="${int}">
+                <constraints nullable="true" />
+            </column>
+            <column name="sell_pre_order_day" type="${int}">
+                <constraints nullable="true" />
+            </column>
+            <column name="switch_pre_order_day" type="${int}">
+                <constraints nullable="true" />
+            </column>
+            <column name="auto_redeem_fund" type="${varchar.large}">
+                <constraints nullable="true" />
+            </column>
+            <column name="beg_IPO_date" type="${date}">
+                <constraints nullable="true" />
+            </column>
+            <column name="end_IPO_date" type="${date}">
+                <constraints nullable="true" />
+            </column>
+            <column name="plain" type="${char}">
+                <constraints nullable="true" />
+            </column>
+            <column name="derivatives_flag" type="${char}">
+                <constraints nullable="true" />
+            </column>
+            <column name="lag_allocation_day" type="${int}">
+                <constraints nullable="true" />
+            </column>
+            <column name="settlement_holiday_flag" type="${char}">
+                <constraints nullable="true" />
+            </column>
+            <column name="health_insurance" type="${char}">
+                <constraints nullable="true" />
+            </column>
+            <column name="previous_fund_code" type="${varchar.small}">
+                <constraints nullable="true" />
+            </column>
+            <column name="investor_alert" type="${varchar.small}">
+                <constraints nullable="true" />
+            </column>
+            <column name="ISIN" type="${varchar.small}">
+                <constraints nullable="true" />
+            </column>
+            <column name="low_bal_condition" type="${char}">
+                <constraints nullable="true" />
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20"  author="james">
+        <dropTable cascadeConstraints="true"
+                   tableName="user_cdd"/>
+        <dropTable cascadeConstraints="true"
+                   tableName="redemption_bank_account"/>
+
+        <renameTable newTableName="bank_account"
+                     oldTableName="subscription_bank_account"/>
+
+        <addColumn tableName="bank_account">
+            <column name="type" type="${varchar.small}">
+                <constraints nullable="false" />
+            </column>
+            <column name="branch_code" type="${varchar.small}">
+                <constraints nullable="false" />
+            </column>
+            <column name="fcn_account_id" type="${varchar.small}">
+                <constraints nullable="false" />
+            </column>
+        </addColumn>
+
+        <addColumn tableName="accounts">
+            <column name="cdd_no_3_choice" type="${varchar.small}">
+                <constraints nullable="true" />
+            </column>
+            <column name="cdd_no_4_choice" type="${varchar.small}">
+                <constraints nullable="true" />
+            </column>
+        </addColumn>
+
+        <dropForeignKeyConstraint baseTableName="bank_account"
+                                  constraintName="fk_sub_bank_to_plan_id"/>
+
+        <createTable tableName="fund_mapping">
+            <column name="id" type="${int}" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="amc_code" type="${varchar.small}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="fund_code" type="${varchar.small}">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="21" author="james">
+        <createTable tableName="subscriptions">
+            <column name="id" type="${int}" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="user_id" type="${int}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="fund_plan_id" type="${int}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="transaction_date_time" type="${timestamp}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="sa_order_no" type="${varchar.small}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="fcn_account_id" type="${varchar.small}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="unitholder_id" type="${varchar.small}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="fund_code" type="${varchar.small}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="amount" type="${double}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="effective_date" type="${date}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="payment_type" type="${varchar.small}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="channel" type="${varchar.small}">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="redemptions">
+            <column name="id" type="${int}" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="user_id" type="${int}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="fund_plan_id" type="${int}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="transaction_date_time" type="${timestamp}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="sa_order_no" type="${varchar.small}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="fcn_account_id" type="${varchar.small}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="unitholder_id" type="${varchar.small}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="fund_code" type="${varchar.small}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="redemption_type" type="${varchar.small}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="amount" type="${double}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="unit" type="${double}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="effective_date" type="${date}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="payment_type" type="${varchar.small}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="channel" type="${varchar.small}">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="switching">
+            <column name="id" type="${int}" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="user_id" type="${int}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="fund_plan_id" type="${int}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="transaction_date_time" type="${timestamp}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="sa_order_no" type="${varchar.small}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="fcn_account_id" type="${varchar.small}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="unitholder_id" type="${varchar.small}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="fund_code" type="${varchar.small}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="redemption_type" type="${varchar.small}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="amount" type="${double}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="counter_fund_code" type="${varchar.small}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="effective_date" type="${date}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="channel" type="${varchar.small}">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+
+        <addColumn tableName="basket_order">
+            <column name="unitholder_id" type="${varchar.small}">
+                <constraints nullable="true" />
+            </column>
+            <column name="redemption_type" type="${varchar.small}">
+                <constraints nullable="true" />
+            </column>
+            <column name="unit" type="${varchar.small}">
+                <constraints nullable="true" />
+            </column>
+        </addColumn>
+        <addColumn tableName="bank_account">
+            <column name="ic_license" type="${varchar.small}">
+                <constraints nullable="true" />
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="22"  author="james">
+        <createTable tableName="allotted_transactions">
+            <column name="id" type="${int}" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="sa_order_reference_no" type="${varchar.small}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="transaction_date" type="${timestamp}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="fcn_account_id" type="${varchar.small}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="amc_code" type="${varchar.small}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="unitholder_id" type="${varchar.small}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="transaction_code" type="${varchar.small}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="fund_code" type="${varchar.small}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="override_risk_profile_flag" type="${char}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="override_fx_risk_flag" type="${char}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="redemption_type" type="${varchar.small}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="amount" type="${double}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="unit" type="${double}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="effective_date" type="${date}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="payment_type" type="${varchar.small}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="bank_code" type="${varchar.small}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="bank_account" type="${varchar.small}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="cheque_no" type="${varchar.small}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="cheque_date" type="${date}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="ic_license" type="${varchar.small}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="branch_no" type="${varchar.small}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="channel" type="${varchar.small}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="force_entry" type="${char}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="ltf_condition" type="${char}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="reason_sell" type="${char}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="rmf_capital_holding_choice" type="${char}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="rmf_capital_redeem_choice" type="${char}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="auto_redeem_fund_code" type="${varchar.small}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="transaction_id" type="${varchar.small}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="status" type="${varchar.small}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="amc_order_reference_no" type="${varchar.small}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="allotment_date" type="${date}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="allotted_nav" type="${double}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="allotted_amount" type="${double}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="allotted_unit" type="${double}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="fee" type="${double}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="with_holding_tax" type="${double}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="vat" type="${double}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="brokerage_fee" type="${double}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="with_holding_tax_ltf" type="${double}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="amc_pay_date" type="${date}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="registrar_transaction_flag" type="${char}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="sell_all_unit_flag" type="${char}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="settlement_bank_code" type="${varchar.small}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="settlement_bank_account" type="${varchar.small}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="reject_reason" type="${varchar.small}">
+                <constraints nullable="true"/>
+            </column>
+<!--            <column name="chq_branch" type="${varchar.small}">-->
+<!--                <constraints nullable="true"/>-->
+<!--            </column>-->
+<!--            <column name="tax_invoice_no" type="${varchar.small}">-->
+<!--                <constraints nullable="true"/>-->
+<!--            </column>-->
+<!--            <column name="amc_relate_order_reference_no" type="${varchar.small}">-->
+<!--                <constraints nullable="true"/>-->
+<!--            </column>-->
+<!--            <column name="ic_code" type="${varchar.small}">-->
+<!--                <constraints nullable="true"/>-->
+<!--            </column>-->
+<!--            <column name="brokerage_fee_vat" type="${double}">-->
+<!--                <constraints nullable="true"/>-->
+<!--            </column>-->
+<!--            <column name="approval_code" type="${varchar.small}">-->
+<!--                <constraints nullable="true"/>-->
+<!--            </column>-->
+<!--            <column name="nav_date" type="${date}">-->
+<!--                <constraints nullable="true"/>-->
+<!--            </column>-->
+<!--            <column name="collateral_account" type="${varchar.small}">-->
+<!--                <constraints nullable="true"/>-->
+<!--            </column>-->
+<!--            <column name="credit_card_issuer" type="${varchar.small}">-->
+<!--                <constraints nullable="true"/>-->
+<!--            </column>-->
+        </createTable>
+        <addColumn tableName="fund_follow">
+            <column name="fund_plan_id" type="${int}">
+                <constraints nullable="true" />
+            </column>
+        </addColumn>
+        <addColumn tableName="assessments">
+            <column name="image_url" type="${varchar.medium}">
+                <constraints nullable="true" />
+            </column>
+        </addColumn>
+        <addColumn tableName="users">
+            <column name="is_bank_connect" type="${boolean}" defaultValue="false">
+                <constraints nullable="false" />
+            </column>
+            <column name="is_suit_test" type="${boolean}" defaultValue="false">
+                <constraints nullable="false" />
+            </column>
+        </addColumn>
+        <addColumn tableName="fund_plan">
+            <column name="value" type="${double}">
+                <constraints nullable="true" />
+            </column>
+            <column name="profit" type="${double}">
+                <constraints nullable="true" />
+            </column>
+            <column name="profit_percent" type="${double}">
+                <constraints nullable="true" />
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="23"  author="james">
+        <createTable tableName="account_file">
+            <column name="id" type="${int}" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="user_id" type="${int}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="file_type" type="${varchar.small}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="image_url" type="${varchar.medium}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="pdf_url" type="${varchar.medium}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="created_date" type="${timestamp}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_by" type="${varchar.small}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_date" type="${timestamp}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_by" type="${varchar.small}">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="24"  author="james">
+        <createTable tableName="fcn_customer_profile">
+            <column name="id" type="${int}" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="card_number" type="${varchar.small}">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+        <addColumn tableName="accounts">
+            <column name="port_id" type="${varchar.small}">
+                <constraints nullable="true" />
+            </column>
+            <column name="application_date" type="${date}">
+                <constraints nullable="true" />
+            </column>
+            <column name="cdd_date" type="${date}">
+                <constraints nullable="true" />
+            </column>
+            <column name="fatca_date" type="${date}">
+                <constraints nullable="true" />
+            </column>
+        </addColumn>
+        <addColumn tableName="bank_account">
+            <column name="finnet_customer_no" type="${varchar.small}">
+                <constraints nullable="true" />
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="25" author="ryu">
+        <createTable tableName="funds_recommend">
+            <column name="id" type="${int}" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false" />
+            </column>
+            <column name="card_number" type="${int}">
+                <constraints nullable="false" unique="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="26"  author="james">
+        <createTable tableName="switching_matrix">
+            <column name="id" type="${int}" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="fund_code_out" type="${varchar.small}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="fund_code_in" type="${varchar.small}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="switch_settlement_day" type="${int}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="switching_type" type="${varchar.small}">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+        <addColumn tableName="users">
+            <column name="is_bank_approve" type="${boolean}" defaultValue="false">
+                <constraints nullable="false" />
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="27" author="apichat.s">
+        <renameColumn tableName="funds_recommend" oldColumnName="card_number" newColumnName="fund_id" columnDataType="${int}"/>
+    </changeSet>
+
+    <changeSet id="28"  author="james">
+        <createTable tableName="confirmation_note">
+            <column name="id" type="${int}" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="trade_date" type="${date}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="due_date" type="${date}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="settlement_no" type="${varchar.small}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="tax_invoice" type="${varchar.small}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="account_no" type="${varchar.small}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="name" type="${varchar.small}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="card_no" type="${varchar.small}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="fund_code" type="${varchar.small}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="amc_code" type="${varchar.small}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="allotted_unit" type="${double}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="allotted_amount" type="${double}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="fee_vat" type="${double}">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="29"  author="james">
+        <addColumn tableName="bank_account">
+            <column name="is_default" type="${boolean}" defaultValue="false">
+                <constraints nullable="false" />
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="30"  author="nuttee">
+        <addColumn tableName="users">
+            <column name="is_upload" type="${boolean}" defaultValue="false">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="31"  author="nuttee">
+        <addColumn tableName="basket_order">
+            <column name="counter_fund_code" type="${varchar.small}">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="32"  author="james">
+        <createTable tableName="balances">
+            <column name="id" type="${int}" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="amc_code" type="${varchar.small}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="fcn_account_id" type="${varchar.small}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="unitholder_id" type="${varchar.small}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="fund_code" type="${varchar.small}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="unit_balance" type="${double}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="amount" type="${double}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="available_unit_balance" type="${double}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="available_amount" type="${double}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="pending_unit" type="${double}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="pending_amount" type="${double}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="pledge_unit" type="${double}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="average_cost" type="${double}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="nav" type="${double}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="nav_date" type="${date}">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="33"  author="james">
+        <createTable tableName="fund_holiday">
+            <column name="id" type="${int}" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="fund_code" type="${varchar.small}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="holiday_date" type="${date}">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+        <createTable tableName="trade_calendar">
+            <column name="id" type="${int}" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="fund_code" type="${varchar.small}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="transaction_code" type="${varchar.small}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="trade_type" type="${varchar.small}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="trade_date" type="${date}">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="34"  author="apichat.s">
+        <addColumn tableName="users">
+            <column name="kyc_request_id" type="${varchar.medium}">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="35"  author="james">
+        <createTable tableName="transaction_file">
+            <column name="id" type="${int}" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="type" type="${varchar.small}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_id" type="${int}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="fcn_account_id" type="${varchar.small}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="file_path" type="${varchar.medium}">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="unitholder_mapping">
+            <column name="id" type="${int}" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="fcn_account_id" type="${varchar.small}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="amc_code" type="${varchar.small}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="unitholder_id" type="${varchar.small}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="account_type" type="${varchar.small}">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="36"  author="james">
+        <dropNotNullConstraint columnDataType="${double}"
+                               columnName="amount"
+                               tableName="basket_order"/>
+
+        <modifyDataType columnName="unit"
+                        newDataType="${double}"
+                        tableName="basket_order"/>
+    </changeSet>
+
+    <changeSet id="37"  author="james">
+        <addColumn tableName="users">
+            <column name="pdpa_version" type="${int}" defaultValue="0">
+                <constraints nullable="false"/>
+            </column>
+            <column name="invalid_auth_count" type="${int}" defaultValue="0">
+                <constraints nullable="false"/>
+            </column>
+            <column name="invalid_pin_count" type="${int}" defaultValue="0">
+                <constraints nullable="false"/>
+            </column>
+            <column name="invalid_otp_count" type="${int}" defaultValue="0">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="38"  author="james">
+        <createTable tableName="dividend_transactions">
+            <column name="id" type="${int}" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="fund_code" type="${varchar.small}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="book_closed_date" type="${date}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="amc_code" type="${varchar.small}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="fcn_account_id" type="${varchar.small}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="unitholder_id" type="${varchar.small}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="unit" type="${double}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="dividend_amount" type="${double}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="withholding_tax" type="${double}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="dividend_amount_net" type="${double}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="payment_type" type="${varchar.small}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="bank_code" type="${varchar.small}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="bank_account" type="${varchar.small}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="cheque_no" type="${varchar.small}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="reinvest_fund_code" type="${varchar.small}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="reinvest_amc_code" type="${varchar.small}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="agent_pay_flag" type="${char}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="fund_tax_id" type="${varchar.small}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="payment_date" type="${date}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="dividend_rate" type="${double}">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="39"  author="james">
+        <createTable tableName="verify_token">
+            <column name="id" type="${int}" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="user_id" type="${int}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="type" type="${varchar.small}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="token" type="${varchar.small}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_date" type="${timestamp}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="expired_date" type="${timestamp}">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+
+        <addColumn tableName="users">
+            <column name="is_verify_email" type="${boolean}" defaultValue="true">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="40"  author="nuttee">
+        <createTable tableName="dividend_news">
+            <column name="id" type="${int}" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="fund_tax_id" type="${varchar.medium}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="fund_code" type="${varchar.medium}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="announce_date" type="${date}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="announce_type" type="${varchar.medium}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="payment_date" type="${date}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="book_closing_date" type="${date}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="dividend_rate" type="${double}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="beg_suspend_date_sub" type="${date}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="end_suspend_date_sub" type="${date}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="beg_suspend_date_red" type="${date}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="end_suspend_date_red" type="${date}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="beg_suspend_date_swi" type="${date}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="end_suspend_date_swi" type="${date}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="beg_suspend_date_swo" type="${date}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="end_suspend_date_swo" type="${date}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="acct_period_from" type="${date}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="acct_period_to" type="${date}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="cancel_date" type="${date}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="updated_date" type="${date}">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="41"  author="james">
+        <addColumn tableName="accounts">
+            <column name="cdd_expired_date" type="${date}">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="42"  author="james">
+        <addColumn tableName="user_otp">
+            <column name="ref_code" type="${varchar.small}">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="43"  author="james">
+        <addColumn tableName="users">
+            <column name="is_fcn_upload" type="${boolean}" defaultValue="true">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+</databaseChangeLog>
